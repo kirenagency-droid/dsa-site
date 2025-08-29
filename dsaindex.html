@@ -1,0 +1,745 @@
+" voir<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- SEO de base -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ALYSSA — Digital Success Academy</title>
+  <meta name="description" content="Tes premiers revenus en ligne même sans expérience. 29 modules, 12h de contenu, +900 membres." />
+  <meta property="og:title" content="ALYSSA — Digital Success Academy" />
+  <meta property="og:description" content="Tes premiers revenus en ligne même sans expérience. 29 modules, 12h de contenu, +900 membres." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#ff6600" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <!-- Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+
+  <style>
+    /* ========= Design System ========= */
+    :root{
+      --bg:#070b10;
+      --panel:#0b1016;
+      --muted:#99a3b4;
+      --text:#eaf0f7;
+      --primary:#ff6600;
+      --primary-2:#ff9a3d;
+      --ring:#1a2330;
+      --success:#22c55e;
+      --shadow:0 30px 80px rgba(0,0,0,.45);
+      --radius:20px;
+      --glass:rgba(255,255,255,.06);
+
+      --grad-1: radial-gradient(1200px 800px at 10% 10%, rgba(255,122,31,.16), rgba(0,0,0,0) 60%),
+                radial-gradient(900px 700px at 85% 15%, rgba(14,165,233,.14), rgba(0,0,0,0) 55%),
+                radial-gradient(900px 650px at 80% 80%, rgba(34,211,238,.08), rgba(0,0,0,0) 55%);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7fafc; --panel:#ffffff; --text:#0e1521; --muted:#5c6677; --ring:#e8eef5;
+        --shadow:0 18px 50px rgba(16,24,40,.08); --glass:rgba(255,255,255,.7);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;scroll-behavior:smooth}
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+    section{padding:40px 0}
+    .container{max-width:1180px;margin:0 auto;padding:0 20px}
+    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 22px;border-radius:14px;border:1px solid var(--ring);font-weight:800;cursor:pointer;transition:.25s transform,.25s box-shadow,.25s background}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary-2));color:#fff;border:none;box-shadow:0 16px 38px rgba(255,102,0,.28);overflow:hidden}
+    .btn-primary::after{content:"";position:absolute;inset:-2px;background:linear-gradient(120deg,rgba(255,255,255,.35),transparent 30%,transparent 70%,rgba(255,255,255,.25));mix-blend:overlay;transform:translateX(-120%);transition:transform .6s ease}
+    .btn-primary:hover::after{transform:translateX(120%)}
+    .btn-ghost{background:transparent}
+    .chip{display:inline-flex;align-items:center;gap:8px;background:var(--glass);backdrop-filter:saturate(140%) blur(10px);border:1px solid var(--ring);padding:8px 14px;border-radius:999px;font-weight:700}
+
+    /* ========= Global layers ========= */
+    .grain{pointer-events:none;position:fixed;inset:0;z-index:-1;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity=".035"/></svg>');opacity:.55}
+    .aurora{position:fixed;inset:0;z-index:-2;background:var(--grad-1);filter:blur(40px) saturate(120%);opacity:.7}
+
+    /* ========= Top progress bar ========= */
+    .top-progress{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--primary),var(--primary-2));z-index:1000;box-shadow:0 0 18px rgba(255,102,0,.5)}
+
+    /* ========= Navbar ========= */
+    .nav-wrap{position:sticky;top:16px;z-index:50}
+    .nav{
+      background:var(--glass);backdrop-filter:saturate(150%) blur(12px);
+      border:1px solid var(--ring);border-radius:30px;margin:16px auto 0;max-width:1180px;
+      display:flex;align-items:center;justify-content:space-between;padding:10px 14px;box-shadow:var(--shadow)
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{font-weight:900;letter-spacing:.5px;background:#111;color:#ff6600;border-radius:18px;padding:6px 14px;border:5px solid #ff6600;display:flex;align-items:center;gap:10px}
+    .logo .pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.8);animation:pulse 2.2s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.8)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+    .nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+    .nav a{font-weight:700;color:var(--text);opacity:.9;padding:10px 14px;border-radius:12px}
+    .nav a:hover{background:var(--glass)}
+    .nav a.active{background:linear-gradient(90deg,rgba(255,102,0,.18),rgba(255,154,61,.18));border:1px solid rgba(255,102,0,.4)}
+    .nav-cta{display:flex;gap:10px}
+    .theme-toggle{width:44px;height:44px;border-radius:12px;border:1px solid var(--ring);display:grid;place-items:center;background:var(--panel);cursor:pointer}
+
+    /* ========= Hero ========= */
+    header.hero{position:relative;padding:90px 0 40px;overflow:hidden}
+    .bg-blobs::before,.bg-blobs::after{content:"";position:absolute;border-radius:50%;filter:blur(60px);opacity:.22;z-index:-2;animation:float 12s ease-in-out infinite}
+    .bg-blobs::before{width:420px;height:420px;left:-120px;top:-80px;background:radial-gradient(circle at 30% 30%, #ff8a00, #ff3d00)}
+    .bg-blobs::after{width:520px;height:520px;right:-160px;bottom:-120px;background:radial-gradient(circle at 50% 50%, #00d4ff, #0061ff);animation-delay:2s}
+    @keyframes float{50%{transform:translateY(20px) scale(1.02)}}
+    .hero-in{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative;z-index:1}
+    .super{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .title{font-size:64px;line-height:1.03;margin:0 0 12px;font-weight:900;background:linear-gradient(90deg,#fff,#ffd6b0,#ff8a00,#fff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:300% 100%;animation:shine 6s linear infinite;letter-spacing:-.5px}
+    @keyframes shine{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+    .subtitle{color:var(--muted);font-size:20px;margin:0 0 22px}
+    .hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+
+    .hero-card{background:var(--panel);border:1px solid var(--ring);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;gap:16px;align-items:center}
+    .avatars{display:flex}
+    .avatars img{width:36px;height:36px;border-radius:50%;border:2px solid #fff;margin-left:-8px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+    .avatars img:first-child{margin-left:0}
+
+    .mock{position:relative;background:linear-gradient(180deg,#0e1622,#0a111a);border:1px solid var(--ring);border-radius:24px;padding:20px;box-shadow:var(--shadow);transform-style:preserve-3d;perspective:1200px;transition:transform .25s}
+    .mock:hover{transform:rotateX(2deg) rotateY(-3deg)}
+    .mock img{border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+    .glow{position:absolute;inset:-2px;border-radius:24px;background:conic-gradient(from 180deg,#ff8a00,transparent 30% 70%,#00c3ff);filter:blur(20px);opacity:.25;z-index:-1}
+
+    /* ===== 3D Hero Canvas ===== */
+    .hero-3d{position:absolute;inset:0;z-index:-1;pointer-events:none;filter:saturate(120%) contrast(110%)}
+    #hero3d{width:100%;height:100%;display:block}
+
+    /* ========= Stats ========= */
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+    .stat{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));border:1px solid var(--ring);border-radius:16px;padding:22px;text-align:center;box-shadow:var(--shadow);overflow:hidden}
+    .stat::after{content:"";position:absolute;inset:0;border-radius:16px;padding:1px;background:conic-gradient(from 0deg,rgba(255,102,0,.45),rgba(27,220,255,.35),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.25}
+    .stat .n{font-size:40px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(90deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .stat .l{color:var(--muted);font-weight:700}
+
+    /* ========= Sections ========= */
+    .section-title{text-align:center;font-size:36px;font-weight:900;margin:40px 0 6px;letter-spacing:-.3px}
+    .section-desc{text-align:center;color:var(--muted);max-width:720px;margin:0 auto 22px}
+
+    .grid{display:grid;gap:18px}
+    .features{grid-template-columns:repeat(4,1fr)}
+    .card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));border:1px solid var(--ring);border-radius:18px;padding:24px;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s,border-color .25s,background .25s;overflow:hidden}
+    .card::before{content:"";position:absolute;inset:-1px;background:radial-gradient(600px 220px at var(--mx,50%) var(--my,0%),rgba(255,102,0,.18),transparent 70%);opacity:0;transition:opacity .25s;pointer-events:none}
+    .card:hover::before{opacity:1}
+    .card:hover{transform:translateY(-6px);border-color:rgba(255,102,0,.45);box-shadow:0 26px 70px rgba(255,102,0,.10)}
+    .icon{font-size:28px;margin-bottom:10px}
+    .card .h{font-weight:900;margin-bottom:6px}
+    .card .p{color:var(--muted);font-weight:600}
+
+    /* ========= Tags & media blocks ========= */
+    .tag{display:inline-block;background:rgba(255,255,255,.06);border:1px solid var(--ring);color:var(--text);padding:8px 14px;border-radius:999px;font-weight:700}
+
+    /* === MODULES GRID — Hauteurs égales & CTA alignés === */
+    .modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+    .modules-grid .modules-content{display:flex;flex-direction:column;justify-content:flex-start;gap:14px;background:var(--panel);border:1px solid var(--ring);border-radius:24px;padding:26px 24px;box-shadow:var(--shadow);min-height:360px}
+    .modules-grid .modules-content .section-title{margin:6px 0 4px;font-size:30px}
+    .modules-grid .modules-content .section-desc{margin:0 0 10px}
+    .modules-grid .modules-content .tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+    .modules-grid .modules-content .btn{margin-top:auto;align-self:stretch;height:52px;border-radius:16px}
+    @media (max-width:1000px){.modules-grid{grid-template-columns:1fr;gap:18px}}
+
+    /* ========= Process Steps ========= */
+    .steps{grid-template-columns:repeat(3,1fr)}
+    .step{background:var(--panel);border:1px solid var(--ring);border-radius:18px;padding:20px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .step b{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,var(--primary),var(--primary-2));color:#fff;margin:0 auto 10px}
+    .step::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(255,255,255,.06));pointer-events:none}
+
+    /* ========= Testimonials ========= */
+    #temoignages{padding-top:80px;}  /* espace demandé */
+    .t-grid{grid-template-columns:1.2fr 1fr;gap:20px}
+    .t-quote{position:relative}
+    .t-quote .mark{position:absolute;right:14px;top:-10px;font-size:64px;color:rgba(255,255,255,.14)}
+    .stars{color:#ffb400;margin-bottom:8px}
+
+    /* ========= FAQ ========= */
+    #faq{padding-top:80px;} /* espace demandé */
+    .faq{max-width:900px;margin:0 auto}
+    .faq-item{background:var(--panel);border:1px solid var(--ring);border-radius:16px;margin-bottom:12px;padding:16px 20px}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:900;cursor:pointer}
+    .faq-a{color:var(--muted);display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+    .faq-item.open .faq-a{grid-template-rows:1fr;margin-top:6px}
+    .faq-a > div{overflow:hidden}
+    .faq-toggle{transition:transform .25s}
+    .faq-item.open .faq-toggle{transform:rotate(45deg)}
+    .cta-wrap{display:flex;justify-content:center;align-items:center;text-align:center}
+    .cta{margin:0 auto;max-width:520px;width:100%;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.00));border:1px solid var(--ring);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+
+    /* ========= Floating CTA (mobile) ========= */
+    .floating-cta{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:none;gap:10px;z-index:60}
+    .floating-cta .btn{height:52px;border-radius:16px}
+    @media (max-width:760px){.floating-cta{display:flex}}
+
+    /* ========= Cursor halo ========= */
+    .halo{position:fixed;inset:0;pointer-events:none;z-index:5}
+    .halo::before{content:"";position:absolute;left:var(--hx,-1000px);top:var(--hy,-1000px);width:320px;height:320px;border-radius:50%;background:radial-gradient(closest-side, rgba(255,122,31,.18), rgba(27,220,255,.10), transparent 65%);filter:blur(14px);transform:translate(-50%,-50%)}
+
+    /* ========= Command Palette ========= */
+    .kbar{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;padding-top:10vh;z-index:80;background:rgba(8,12,18,.55);backdrop-filter:blur(6px)}
+    .kbar.show{display:flex}
+    .kbar-dialog{width:min(720px,92vw);background:var(--panel);border:1px solid var(--ring);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .kbar-input{width:100%;padding:16px 18px;border:none;outline:none;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);color:var(--text);font-size:16px}
+    .kbar-list{max-height:50vh;overflow:auto;list-style:none;margin:0;padding:6px}
+    .kbar-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;cursor:pointer}
+    .kbar-item:hover,.kbar-item.active{background:rgba(255,255,255,.06)}
+    .kbar-kbd{margin-left:auto;opacity:.6;font-weight:700;font-size:12px}
+    .kbar-hintbtn{position:fixed;left:16px;bottom:16px;z-index:70;border:1px solid var(--ring);background:var(--panel);border-radius:999px;padding:8px 12px;font-weight:700;opacity:.9}
+
+    /* ========= Utilities ========= */
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.show{opacity:1;transform:none}
+    .center{text-align:center}
+    .mt-6{margin-top:20px}
+    .mt-10{margin-top:28px}
+
+    /* ========= Responsive ========= */
+    @media (max-width:1000px){
+      .hero-in{grid-template-columns:1fr}
+      .media{grid-template-columns:1fr}
+      .features{grid-template-columns:repeat(2,1fr)}
+      .t-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:640px){
+      .title{font-size:38px}
+      .stats{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+      .btn{height:46px}
+    }
+
+    /* Accessibilité : réduit l’animation si demandé */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important}
+      .hero-3d,.halo,.aurora,.grain{display:none}
+    }
+
+    /* Espacement entre sections principales */
+    #avantages { margin-bottom: 60px; }    /* espace après les avantages */
+    #modules   { margin-bottom: 70px; }    /* espace après les modules */
+    #process   { margin-bottom: 70px; }    /* espace après le process */
+    #temoignages { padding-top: 80px; margin-bottom: 70px; }
+    #faq { padding-top: 80px; margin-bottom: 80px; }
+  </style>
+</head>
+<body>
+  <!-- Global layers -->
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="top-progress" id="top-progress" aria-hidden="true"></div>
+  <div class="halo" id="halo" aria-hidden="true"></div>
+
+  <!-- Quick hint (Command Palette) -->
+  <button id="kbar-hint" class="kbar-hintbtn" title="Command Palette">⌘K / Ctrl K</button>
+
+  <!-- ===== NAVBAR ===== -->
+  <div class="nav-wrap">
+    <nav class="nav container">
+      <div class="brand">
+        <span class="logo" id="logo-3d"><span class="pulse"></span> DSA Figueliito</span>
+        <span class="chip">✨ +900 membres</span>
+      </div>
+      <ul id="nav-links">
+        <li><a href="#avantages">Avantages</a></li>
+        <li><a href="#modules">Modules</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#temoignages">Témoignages</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-cta">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Basculer le thème">🌓</button>
+        <a class="btn btn-ghost" href="#faq">Questions</a>
+        <a class="btn btn-primary" href="#cta">Rejoindre</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero bg-blobs" id="top">
+    <!-- 3D futuriste -->
+    <div class="hero-3d" aria-hidden="true">
+      <canvas id="hero3d"></canvas>
+    </div>
+
+    <div class="container hero-in">
+      <div>
+        <div class="super">
+          <span class="chip">🚀 Démarre aujourd’hui</span>
+          <span class="chip">⏱️ 12h de contenu</span>
+          <span class="chip">🔐 Accès à vie</span>
+        </div>
+        <h1 class="title">Tes premiers revenus en ligne, <br>même si t’as 0 expérience.</h1>
+        <p class="subtitle">Digital Success Academy : 29 modules, support communauté, exécutions pas-à-pas. Tu appliques, tu vends.</p>
+        <div class="hero-cta">
+          <a href="#cta" class="btn btn-primary">Je me lance</a>
+          <a href="#" class="btn btn-ghost">Prendre rendez-vous</a>
+        </div>
+
+        <div class="hero-card mt-6 reveal" aria-label="+900 membres nous ont rejoints">
+          <div class="avatars" aria-hidden="true">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="">
+            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="">
+          </div>
+          <div style="font-weight:800">+900 membres nous ont rejoints</div>
+          <div style="margin-left:auto;color:var(--success);font-weight:900">● en ligne</div>
+        </div>
+
+        <div class="stats container reveal" aria-label="Statistiques">
+          <div class="stat"><div class="n" data-count="900">0</div><div class="l">personnes accompagnées</div></div>
+          <div class="stat"><div class="n" data-count="12">0</div><div class="l">heures de contenu vidéo</div></div>
+          <div class="stat"><div class="n" data-count="29">0</div><div class="l">modules complets</div></div>
+        </div>
+      </div>
+
+      <div class="mock reveal" aria-hidden="true">
+        <span class="glow"></span>
+        <img src="https://i.imgur.com/6QZyQbA.png" alt="aperçu plateforme" loading="lazy">
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== AVANTAGES ===== -->
+  <section id="avantages" class="container">
+    <h2 class="section-title reveal">Pourquoi choisir la Digital Success Academy ?</h2>
+    <p class="section-desc reveal">Découvrez les points forts de notre programme intensif.</p>
+
+    <div class="grid features">
+      <div class="card reveal"><div class="icon">📋</div><div class="h">Contenu structuré</div><div class="p">29 modules clairs et progressifs.</div></div>
+      <div class="card reveal"><div class="icon">♾️</div><div class="h">Accès à vie</div><div class="p">Revue illimitée de la formation.</div></div>
+      <div class="card reveal"><div class="icon">👥</div><div class="h">Groupe privé</div><div class="p">+900 membres, support continu.</div></div>
+      <div class="card reveal"><div class="icon">🔄</div><div class="h">Mises à jour</div><div class="p">Contenus et templates ajoutés chaque trimestre.</div></div>
+    </div>
+  </section>
+
+  <!-- ===== MODULES ===== -->
+  <section id="modules" class="container">
+    <div class="modules-grid">
+      <div class="modules-content reveal">
+        <div class="chip">★ Modules</div>
+        <h3 class="section-title" style="margin:6px 0 4px">Passe à l’action avec la DSA</h3>
+        <p class="section-desc" style="margin:0 0 10px">Apprends intensément et booste ta présence en ligne.</p>
+        <div class="tags">
+          <span class="tag">Point de départ</span>
+          <span class="tag">Mindset</span>
+          <span class="tag">MRR mastery</span>
+          <span class="tag">Créer un produit digital</span>
+          <span class="tag">Stan Store / System.io</span>
+          <span class="tag">Email marketing</span>
+          <span class="tag">Copywriting</span>
+          <span class="tag">Branding</span>
+          <span class="tag">Viralité</span>
+        </div>
+        <a href="#cta" class="btn btn-primary">Accéder maintenant</a>
+      </div>
+
+      <div class="modules-content reveal">
+        <div class="chip">★ Modules avancés</div>
+        <h3 class="section-title" style="margin:6px 0 4px">Va plus loin</h3>
+        <p class="section-desc" style="margin:0 0 10px">Stratégies “faceless”, plan éditorial, acquisition rapide d’abonnés.</p>
+        <div class="tags">
+          <span class="tag">Affiliation</span>
+          <span class="tag">Marketing faceless</span>
+          <span class="tag">Stratégie face cam</span>
+          <span class="tag">Secrets Instagram</span>
+          <span class="tag">Acquérir 1k abonnés vite</span>
+        </div>
+        <a href="#cta" class="btn btn-primary">Rejoindre & scaler</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROCESS ===== -->
+  <section id="process" class="container">
+    <div class="center"><span class="chip">★ Process</span></div>
+    <h2 class="section-title reveal" style="margin-top:10px">Comment rejoindre la DSA</h2>
+    <p class="section-desc reveal">Trois étapes simples pour plonger dans la Digital Success Academy.</p>
+
+    <div class="grid steps">
+      <div class="step reveal"><b>01</b><h4>Création de compte</h4><p class="p">Inscris-toi en 2 clics et reçois tes accès par email.</p></div>
+      <div class="step reveal"><b>02</b><h4>Découverte des modules</h4><p class="p">29 modules + supports pour chaque étape.</p></div>
+      <div class="step reveal"><b>03</b><h4>Premières ventes</h4><p class="p">Applique nos stratégies et vends dès la 1ʳᵉ semaine.</p></div>
+    </div>
+  </section>
+
+  <!-- ===== TEMOIGNAGES ===== -->
+  <section id="temoignages" class="container">
+    <div class="center"><span class="chip">★ Témoignages</span></div>
+    <h2 class="section-title reveal" style="margin-top:10px">Ils l’ont fait</h2>
+    <p class="section-desc reveal">Comment la DSA a changé leur quotidien.</p>
+
+    <div class="grid t-grid" style="justify-content:center;grid-template-columns:1fr;">
+      <div class="card reveal t-quote" style="margin:0 auto;text-align:center;max-width:420px;">
+        <div class="mark">❝</div>
+        <div class="stars">★★★★★</div>
+        <p class="p" style="color:var(--text)">Une vente ce matin et près de 3 000€ générés depuis le 1er février, alors que j’en parlais que depuis lundi. J’adore la DSA !</p>
+        <div style="font-weight:900">Marie</div>
+        <small style="color:var(--muted)">En moins de 2 mois</small>
+      </div>
+    </div>
+
+    <div class="grid features" style="margin-top:14px">
+      <div class="card reveal"><div class="stars">★★★★★</div><p class="p" style="color:var(--text)">Je suis à ma 3ᵉ vente ! Vente en automatique pendant que je bossais 🤩</p><div style="font-weight:900">Lisa</div></div>
+      <div class="card reveal"><div class="stars">★★★★★</div><p class="p" style="color:var(--text)">En 2 heures, 1200€ encaissés en full auto grâce à la DSA.</p><div style="font-weight:900">Elena</div></div>
+      <div class="card reveal"><div class="stars">★★★★★</div><p class="p" style="color:var(--text)">Lancée le 4 janvier… deux ventes le jour même !</p><div style="font-weight:900">Sophie</div></div>
+      <div class="card reveal"><div class="stars">★★★★★</div><p class="p" style="color:var(--text)">Structure claire, passages à l’action simples. Ça change tout.</p><div style="font-weight:900">Nassim</div></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="container">
+    <div class="center"><span class="chip">★ FAQ</span></div>
+    <h2 class="section-title reveal" style="margin-top:10px">Questions fréquentes</h2>
+
+    <div class="faq">
+      <div class="faq-item reveal">
+        <div class="faq-q">Combien de temps ai-je accès à la formation ? <span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div>Accès à vie. Les mises à jour trimestrielles sont incluses.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Quels droits de revente (MRR) sont inclus ? <span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div>Dès l’inscription, droits de revente MRR : revends à 597€ et conserve 100% des revenus.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Quel niveau est requis ? <span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div>Aucun. La DSA convient aux débutants comme aux confirmés.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Quel support est disponible ? <span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div>Discord privé, coaching collectif, Q&A, réponse en -12h par une coach dédiée.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">Garantie ? <span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div>Satisfait ou remboursé 7 jours.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section id="cta" class="container cta-wrap" style="margin-bottom:90px">
+    <div class="cta reveal">
+      <h3>Prête à lancer tes premières ventes ?</h3>
+      <p>Rejoins la Digital Success Academy et passe à l’action dès aujourd’hui.</p>
+      <div class="hero-cta" style="justify-content:center">
+        <a class="btn btn-primary" href="#">Rejoindre la formation</a>
+        <a class="btn btn-ghost" href="#modules">Voir le programme</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating CTA (mobile) -->
+  <div class="floating-cta">
+    <a class="btn btn-primary" href="#cta">🚀 Rejoindre</a>
+    <a class="btn btn-ghost" href="#faq">FAQ</a>
+  </div>
+
+  <footer class="container center" style="padding:32px 0;color:var(--muted)">
+    © <span id="y"></span> ALYSSA — Digital Success Academy • Tous droits réservés
+  </footer>
+
+  <!-- Background particles -->
+  <div id="particles-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></div>
+
+  <!-- ===== Command Palette markup ===== -->
+  <div id="kbar" class="kbar" aria-hidden="true">
+    <div class="kbar-dialog" role="dialog" aria-modal="true" aria-labelledby="kbar-title">
+      <input id="kbar-input" class="kbar-input" placeholder="Tape pour naviguer… (ex: modules, faq, thème)" aria-label="Rechercher une action" />
+      <ul id="kbar-list" class="kbar-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Année footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Scroll progress bar
+    const tp = document.getElementById('top-progress');
+    const onScrollProgress = () => {
+      const h = document.documentElement;
+      const p = Math.max(0, Math.min(1, h.scrollTop / (h.scrollHeight - h.clientHeight)));
+      tp.style.width = (p * 100) + '%';
+    };
+    document.addEventListener('scroll', onScrollProgress, { passive:true }); onScrollProgress();
+
+    // Scrollspy
+    const sections = [...document.querySelectorAll('section[id], header.hero')];
+    const links = [...document.querySelectorAll('#nav-links a')];
+    const setActive = () => {
+      let idx = 0, y = window.scrollY + 120;
+      sections.forEach((s,i)=>{ if (y >= s.offsetTop) idx = i; });
+      links.forEach(l=>l.classList.remove('active'));
+      const id = sections[idx].id || 'top';
+      const link = links.find(l=>l.getAttribute('href') === '#' + id);
+      if(link) link.classList.add('active');
+    };
+    document.addEventListener('scroll', setActive, { passive:true }); setActive();
+
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', ()=>{
+      document.documentElement.classList.toggle('light');
+      if(document.documentElement.classList.contains('light')){
+        document.documentElement.style.setProperty('--bg','#ffffff');
+        document.documentElement.style.setProperty('--panel','#ffffff');
+        document.documentElement.style.setProperty('--text','#0e1521');
+        document.documentElement.style.setProperty('--muted','#5c6677');
+        document.documentElement.style.setProperty('--ring','#e8eef5');
+        document.documentElement.style.setProperty('--glass','rgba(255,255,255,.7)');
+      }else{
+        document.documentElement.style.setProperty('--bg','#070b10');
+        document.documentElement.style.setProperty('--panel','#0b1016');
+        document.documentElement.style.setProperty('--text','#eaf0f7');
+        document.documentElement.style.setProperty('--muted','#99a3b4');
+        document.documentElement.style.setProperty('--ring','#1a2330');
+        document.documentElement.style.setProperty('--glass','rgba(255,255,255,.06)');
+      }
+    });
+
+    // Card light follow
+    document.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('pointermove',e=>{
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100)+'%');
+        card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100)+'%');
+      }, {passive:true});
+    });
+
+    // FAQ
+    document.querySelectorAll('.faq-q').forEach(q=>{
+      q.addEventListener('click',()=>{
+        const item = q.closest('.faq-item');
+        const open = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+        if(!open){ item.classList.add('open'); }
+      });
+    });
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); }
+      });
+    },{threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // Counter up
+    const counters = document.querySelectorAll('[data-count]');
+    const ioNum = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(!e.isIntersecting) return;
+        const el = e.target, to = parseInt(el.getAttribute('data-count'),10);
+        let cur = 0, dur = 1100, start = performance.now();
+        function tick(t){ const p = Math.min((t-start)/dur,1); cur = Math.floor(p*to); el.textContent = (to>=100? '+' : '') + cur + (to>=100? '' : ''); if(p<1) requestAnimationFrame(tick); }
+        requestAnimationFrame(tick); ioNum.unobserve(el);
+      });
+    },{threshold:.6});
+    counters.forEach(c=>ioNum.observe(c));
+
+    // Magnetic hover on primary buttons + confetti
+    const magnets = document.querySelectorAll('.btn-primary');
+    function confettiAt(x,y){
+      const n = 22, root = document.body;
+      for(let i=0;i<n;i++){
+        const d = document.createElement('span');
+        const angle = (Math.PI*2)*Math.random();
+        const dist = 30 + Math.random()*60;
+        const tx = Math.cos(angle)*dist, ty = Math.sin(angle)*dist;
+        Object.assign(d.style,{
+          position:'fixed', left:x+'px', top:y+'px', width:'6px', height:'6px',
+          background:`hsl(${Math.floor(Math.random()*360)} 90% 60%)`,
+          borderRadius:'2px', pointerEvents:'none', zIndex:1000, opacity:'1',
+          transform:`translate(-50%,-50%)`, transition:'transform .8s cubic-bezier(.2,.8,.2,1), opacity .8s'
+        });
+        root.appendChild(d);
+        requestAnimationFrame(()=>{
+          d.style.transform = `translate(${tx}px, ${ty}px) scale(${1+Math.random()})`;
+          d.style.opacity = '0';
+        });
+        setTimeout(()=>d.remove(),900);
+      }
+    }
+    magnets.forEach(btn=>{
+      let raf;
+      btn.addEventListener('mousemove', (e)=>{
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(()=>{
+          const r = btn.getBoundingClientRect();
+          const x = e.clientX - r.left - r.width/2;
+          const y = e.clientY - r.top - r.height/2;
+          btn.style.transform = `translate(${x*0.04}px, ${y*0.04}px)`;
+        });
+      }, {passive:true});
+      btn.addEventListener('mouseleave', ()=>{ btn.style.transform='translate(0,0)'; });
+      btn.addEventListener('click', (e)=>{
+        const r = btn.getBoundingClientRect();
+        confettiAt(r.left + r.width/2, r.top + r.height/2);
+      });
+    });
+
+    // Pointer halo
+    const halo = document.getElementById('halo');
+    window.addEventListener('pointermove', (e)=>{
+      halo.style.setProperty('--hx', e.clientX + 'px');
+      halo.style.setProperty('--hy', e.clientY + 'px');
+    }, {passive:true});
+
+    // ===== 3D HERO Futuriste (Three.js)
+    (()=>{
+      const canvas = document.getElementById('hero3d');
+      if (!canvas || !window.THREE) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(dpr); renderer.setClearColor(0x000000, 0);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 200); camera.position.set(0, 0.6, 7);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+      const key = new THREE.PointLight(0xff6600, 1.3, 80); key.position.set(3, 4, 6);
+      const fill = new THREE.PointLight(0x18c6ff, 1.0, 80); fill.position.set(-3, -1, -4);
+      scene.add(key, fill);
+
+      const ringGeo = new THREE.TorusKnotGeometry(1.2, 0.28, 240, 36);
+      const ringMat = new THREE.MeshPhysicalMaterial({color:0xff7a1f,emissive:0xff6600,emissiveIntensity:0.25,metalness:0.85,roughness:0.15,clearcoat:1,clearcoatRoughness:0.05});
+      const ring = new THREE.Mesh(ringGeo, ringMat); scene.add(ring);
+      const wire = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.06 })); scene.add(wire);
+
+      const COUNT = 1800; const pos = new Float32Array(COUNT * 3);
+      for (let i = 0; i < COUNT; i++) {
+        const r = 10 * Math.cbrt(Math.random()) + 2; const t = Math.acos(2*Math.random()-1); const p = 2*Math.PI*Math.random();
+        pos[i*3+0] = r*Math.sin(t)*Math.cos(p); pos[i*3+1] = (r*Math.cos(t))*0.6; pos[i*3+2] = r*Math.sin(t)*Math.sin(p);
+      }
+      const ptsGeo = new THREE.BufferGeometry(); ptsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const points = new THREE.Points(ptsGeo, new THREE.PointsMaterial({size:0.06,sizeAttenuation:true,transparent:true,depthWrite:false,color:0x79e0ff}));
+      scene.add(points);
+
+      const plane = new THREE.Mesh(new THREE.PlaneGeometry(20,10,1,1), new THREE.MeshBasicMaterial({ color: 0x0ea5e9, transparent:true, opacity: .06 })); plane.position.set(0,1,-4); plane.rotation.x = -0.2; scene.add(plane);
+      const grid = new THREE.GridHelper(50, 50, 0x1bdcff, 0x1bdcff); grid.material.opacity = 0.10; grid.material.transparent = true; grid.position.y = -2.2; scene.add(grid);
+
+      let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+      const rect = () => canvas.getBoundingClientRect();
+      window.addEventListener('pointermove', (e)=>{ const r = rect(); mouseX = (e.clientX-r.left)/r.width*2-1; mouseY = (e.clientY-r.top)/r.height*2-1; }, { passive:true });
+
+      function resize(){ const r = rect(); const w = Math.max(1,r.width), h = Math.max(1,r.height); renderer.setSize(w,h,false); camera.aspect = w/h; camera.updateProjectionMatrix(); }
+      resize(); window.addEventListener('resize', resize);
+
+      let paused=false; document.addEventListener('visibilitychange', ()=> paused = document.hidden);
+      const clock = new THREE.Clock();
+      function animate(){
+        if(!paused){
+          const t = clock.getElapsedTime();
+          targetX += (mouseX - targetX) * 0.05; targetY += (mouseY - targetY) * 0.05;
+          camera.position.x = targetX * 0.8; camera.position.y = 0.6 + targetY * 0.4; camera.lookAt(0,0,0);
+          ring.rotation.y += 0.007; ring.rotation.x = Math.sin(t * 0.6) * 0.12; wire.rotation.copy(ring.rotation);
+          points.rotation.y -= 0.0009; plane.rotation.z += 0.0002; grid.rotation.y += 0.0006;
+          ring.material.emissiveIntensity = 0.22 + Math.sin(t * 1.3) * 0.08;
+          renderer.render(scene,camera);
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // Particles background
+    (function(){
+      const container = document.getElementById('particles-bg');
+      if(!container || !window.THREE) return;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 1, 1000); camera.position.z = 80;
+      const renderer = new THREE.WebGLRenderer({alpha:true,antialias:true}); renderer.setClearColor(0x000000,0); renderer.setSize(innerWidth, innerHeight); container.appendChild(renderer.domElement);
+      const geometry = new THREE.BufferGeometry(); const positions = []; const particles = 28;
+      for(let i=0;i<particles;i++){ positions.push((Math.random()-0.5)*120,(Math.random()-0.5)*70,(Math.random()-0.5)*120); }
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+      const points = new THREE.Points(geometry, new THREE.PointsMaterial({size:0.45,color:0xffffff,transparent:true,opacity:0.07}));
+      scene.add(points);
+      function animate(){ requestAnimationFrame(animate); points.rotation.y += 0.0007; points.rotation.x += 0.0003; renderer.render(scene, camera); } animate();
+      addEventListener('resize',()=>{ renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); });
+    })();
+
+    // Logo micro 3D glow
+    (function(){
+      const logo = document.getElementById('logo-3d'); if(!logo || !window.THREE) return;
+      const w = logo.offsetWidth, h = logo.offsetHeight;
+      logo.style.position = 'relative';
+      const canvas = document.createElement('canvas'); Object.assign(canvas.style,{position:'absolute',left:0,top:0,width:'100%',height:'100%',pointerEvents:'none'}); logo.appendChild(canvas);
+      const renderer = new THREE.WebGLRenderer({canvas,alpha:true,antialias:true}); renderer.setClearColor(0x000000,0); renderer.setSize(w, h);
+      const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(60, w/h, 0.1, 1000); camera.position.set(0,0,7);
+      const glow = new THREE.Mesh(new THREE.TorusGeometry(1.2,0.18,32,64),new THREE.MeshBasicMaterial({color:0xff6600,transparent:true,opacity:0.35})); scene.add(glow);
+      const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.9,64,64), new THREE.MeshPhysicalMaterial({color:0xff6600,metalness:0.7,roughness:0.18,clearcoat:1,clearcoatRoughness:0.05,emissive:0xff6600,emissiveIntensity:0.18})); scene.add(sphere);
+      const light = new THREE.PointLight(0xff6600,1.5,100); light.position.set(0,2,6); scene.add(light); scene.add(new THREE.AmbientLight(0xffffff,0.7));
+      function animate(){ requestAnimationFrame(animate); sphere.rotation.y += 0.03; sphere.rotation.x += 0.01; glow.rotation.z += 0.01; renderer.render(scene, camera); } animate();
+      addEventListener('resize',()=>{ const w2 = logo.offsetWidth, h2 = logo.offsetHeight; renderer.setSize(w2, h2); camera.aspect = w2/h2; camera.updateProjectionMatrix(); });
+    })();
+
+    // ===== Command Palette (⌘K / Ctrl K) =====
+    (function(){
+      const modal = document.getElementById('kbar');
+      const input = document.getElementById('kbar-input');
+      const list  = document.getElementById('kbar-list');
+      const hintBtn = document.getElementById('kbar-hint');
+
+      const actions = [
+        {label:'Aller : Avantages', kbd:'A', run:()=>location.hash='#avantages'},
+        {label:'Aller : Modules',   kbd:'M', run:()=>location.hash='#modules'},
+        {label:'Aller : Process',   kbd:'P', run:()=>location.hash='#process'},
+        {label:'Aller : Témoignages', kbd:'T', run:()=>location.hash='#temoignages'},
+        {label:'Aller : FAQ',       kbd:'F', run:()=>location.hash='#faq'},
+        {label:'Action : Basculer le thème', kbd:'L', run:()=>document.getElementById('theme-toggle').click()},
+        {label:'Action : Rejoindre la formation', kbd:'↵', run:()=>document.querySelector('#cta .btn-primary').click()},
+      ];
+
+      // Ajouter chaque FAQ comme action (ouvre la FAQ)
+      document.querySelectorAll('.faq-item .faq-q').forEach((q,i)=>{
+        actions.push({
+          label:'FAQ : ' + q.textContent.replace('+','').trim(),
+          kbd:'?',
+          run:()=>{
+            location.hash='#faq';
+            document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+            q.closest('.faq-item').classList.add('open');
+            q.scrollIntoView({behavior:'smooth', block:'center'});
+          }
+        })
+      });
+
+      let idx = 0, filtered = actions.slice();
+      function openPalette(){
+        modal.classList.add('show'); modal.removeAttribute('aria-hidden');
+        input.value=''; filter('');
+        setTimeout(()=>input.focus(),0);
+      }
+      function closePalette(){
+        modal.classList.remove('show'); modal.setAttribute('aria-hidden','true');
+      }
+      function filter(q){
+        const s = q.toLowerCase().trim();
+        filtered = actions.filter(a=>a.label.toLowerCase().includes(s));
+        idx = 0; render();
+      }
+      function render(){
+        list.innerHTML = '';
+        filtered.forEach((a,i)=>{
+          const li = document.createElement('li'); li.className = 'kbar-item'+(i===idx?' active':'');
+          li.innerHTML = `<span>${a.label}</span><span class="kbar-kbd">${a.kbd}</span>`;
+          li.addEventListener('click', ()=>{ a.run(); closePalette(); });
+          list.appendChild(li);
+        });
+      }
+
+      // Open shortcuts
+      window.addEventListener('keydown',(e)=>{
+        const mac = navigator.platform.toUpperCase().includes('MAC');
+        if ((mac && e.metaKey && e.key.toLowerCase()==='k') || (!mac && e.ctrlKey && e.key.toLowerCase()==='k')){
+          e.preventDefault(); openPalette();
+        } else if (modal.classList.contains('show')){
+          if (e.key==='Escape'){ closePalette(); }
+          else if (e.key==='ArrowDown'){ e.preventDefault(); idx = Math.min(idx+1, filtered.length-1); render(); }
+          else if (e.key==='ArrowUp'){ e.preventDefault(); idx = Math.max(idx-1, 0); render(); }
+          else if (e.key==='Enter'){ e.preventDefault(); if(filtered[idx]){ filtered[idx].run(); closePalette(); } }
+        }
+      });
+      hintBtn.addEventListener('click', openPalette);
+      modal.addEventListener('click', (e)=>{ if(e.target===modal) closePalette(); });
+      input.addEventListener('input', (e)=>filter(e.target.value));
+      render();
+    })();
+  </script>
+</body>
+</html>
